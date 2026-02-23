@@ -7,9 +7,6 @@ const createMusic = async (req, res) => {
         const {title} = req.body
         const file = req.file
 
-        console.log("req.body:", req.body)
-        console.log("req.file:", req.file)
-
         if(!title || !file) {
             return res.status(400).json({
                 message: "All fields are required"
