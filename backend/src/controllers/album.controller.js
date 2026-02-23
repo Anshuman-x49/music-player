@@ -14,7 +14,7 @@ const createAlbum = async (req, res) => {
         return res.status(201).json({
             message: "Album created successfully",
             album: {
-                _id: album.id,
+                id: album.id,
                 title: album.title,
                 musics: album.musics,
                 artist: album.artist

@@ -24,7 +24,7 @@ const createMusic = async (req, res) => {
         return res.status(201).json({
             message: "Music uploaded successfully",
             music: {
-                _id: music.id,
+                id: music.id,
                 uri: music.uri, 
                 title: music.title,
                 artist: music.artist
