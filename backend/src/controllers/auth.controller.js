@@ -100,4 +100,36 @@ const LoginUser = async (req, res) => {
     }
 }
 
-module.exports = { registerUser, LoginUser }
+const getMe = async (req, res) => {
+    try {
+        const token = req.cookies.token
+        if (!token) {
+            return res.status(401).json({ message: "Not authenticated" })
+        }
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET)
+        const user = await userModel.findById(decoded.id).select("-password")
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found" })
+        }
+
+        return res.status(200).json({
+            user: {
+                id: user._id,
+                username: user.username,
+                email: user.email,
+                role: user.role
+            }
+        })
+    } catch (error) {
+        return res.status(401).json({ message: "Invalid or expired token" })
+    }
+}
+
+const logoutUser = (req, res) => {
+    res.clearCookie("token")
+    return res.status(200).json({ message: "Logged out successfully" })
+}
+
+module.exports = { registerUser, LoginUser, getMe, logoutUser }

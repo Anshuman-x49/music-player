@@ -39,4 +39,30 @@ const createMusic = async (req, res) => {
     }
 }
 
-module.exports =  { createMusic }
+const getAllMusic = async (req, res) => {
+    try {
+        const tracks = await musicModel.find().populate("artist", "username")
+        return res.status(200).json({ tracks })
+    } catch(error) {
+        console.log(error)
+        return res.status(500).json({ message: "Internal server error" })
+    }
+}
+
+const searchMusic = async (req, res) => {
+    try {
+        const { q } = req.query
+        if(!q) {
+            return res.status(400).json({ message: "Search query is required" })
+        }
+        const tracks = await musicModel.find({
+            title: { $regex: q, $options: "i" }
+        }).populate("artist", "username")
+        return res.status(200).json({ tracks })
+    } catch(error) {
+        console.log(error)
+        return res.status(500).json({ message: "Internal server error" })
+    }
+}
+
+module.exports =  { createMusic, getAllMusic, searchMusic }
